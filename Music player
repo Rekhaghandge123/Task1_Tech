@@ -1,0 +1,52 @@
+import os
+import pygame
+from tkinter import Tk, Label, Button, filedialog
+
+class MusicPlayer:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Music Player")
+        self.root.geometry("400x200")
+
+        self.current_track = None
+        self.paused = False
+
+        self.label = Label(root, text="Music Player")
+        self.label.pack(pady=10)
+
+        self.play_button = Button(root, text="Play", command=self.play_music)
+        self.play_button.pack(pady=10)
+
+        self.pause_button = Button(root, text="Pause", command=self.pause_music)
+        self.pause_button.pack(pady=10)
+
+        self.stop_button = Button(root, text="Stop", command=self.stop_music)
+        self.stop_button.pack(pady=10)
+
+        self.choose_file_button = Button(root, text="Choose File", command=self.choose_file)
+        self.choose_file_button.pack(pady=10)
+
+    def play_music(self):
+        if self.current_track:
+            pygame.mixer.music.unpause()
+        else:
+            pygame.mixer.init()
+            pygame.mixer.music.load(self.current_track)
+            pygame.mixer.music.play()
+
+    def pause_music(self):
+        pygame.mixer.music.pause()
+
+    def stop_music(self):
+        pygame.mixer.music.stop()
+
+    def choose_file(self):
+        file_path = filedialog.askopenfilename(defaultextension=".mp3", filetypes=[("MP3 files", "*.mp3")])
+        if file_path:
+            self.current_track = file_path
+            self.label.config(text=os.path.basename(file_path))
+
+if __name__ == "__main__":
+    root = Tk()
+    music_player = MusicPlayer(root)
+    root.mainloop()
